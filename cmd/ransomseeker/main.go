@@ -59,7 +59,7 @@ Examples:
   ransomseeker protect /path/to/protect
   ransomseeker recover /path/to/recover
   ransomseeker scan /path/to/scan
-`, "ransomseeker")
+`)
 }
 
 func detectRansomware() {

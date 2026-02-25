@@ -318,6 +318,19 @@ func (e *ProtectionEngine) RestoreFile(filePath string) error {
 	return nil
 }
 
+// containsSubstring checks if string contains substring.
+func containsSubstring(s, substr string) bool {
+	if len(s) < len(substr) {
+		return false
+	}
+	for i := 0; i <= len(s)-len(substr); i++ {
+		if s[i:i+len(substr)] == substr {
+			return true
+		}
+	}
+	return false
+}
+
 // ruleAppliesTo checks if rule applies to file.
 func ruleAppliesTo(rule ProtectionRule, filePath string) bool {
 	for _, condition := range rule.Conditions {
@@ -331,8 +344,8 @@ func ruleAppliesTo(rule ProtectionRule, filePath string) bool {
 	return false
 }
 
-// createCommonRules creates common protection rules.
-func createCommonRules() []ProtectionRule {
+// CreateCommonRules creates common protection rules.
+func CreateCommonRules() []ProtectionRule {
 	return []ProtectionRule{
 		{
 			ID:          "rule-001",
