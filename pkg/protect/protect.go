@@ -13,11 +13,11 @@ import (
 type ProtectionStrategy string
 
 const (
-	StrategyBlocking    ProtectionStrategy = "blocking"
-	StrategyQuarantine  ProtectionStrategy = "quarantine"
-	StrategySnapshot    ProtectionStrategy = "snapshot"
-	StrategyMonitoring  ProtectionStrategy = "monitoring"
-	StrategyIsolation   ProtectionStrategy = "isolation"
+	StrategyBlocking   ProtectionStrategy = "blocking"
+	StrategyQuarantine ProtectionStrategy = "quarantine"
+	StrategySnapshot   ProtectionStrategy = "snapshot"
+	StrategyMonitoring ProtectionStrategy = "monitoring"
+	StrategyIsolation  ProtectionStrategy = "isolation"
 )
 
 // ProtectionRule represents a protection rule.
@@ -35,7 +35,7 @@ type ProtectionRule struct {
 
 // ProtectedFile represents a protected file.
 type ProtectedFile struct {
-	Path        string
+	Path         string
 	OriginalHash string
 	SnapshotPath string
 	ProtectedAt  time.Time
@@ -44,21 +44,21 @@ type ProtectedFile struct {
 
 // ProtectionStatus represents protection status.
 type ProtectionStatus struct {
-	IsActive      bool
-	Strategy      ProtectionStrategy
-	RulesCount    int
+	IsActive       bool
+	Strategy       ProtectionStrategy
+	RulesCount     int
 	ProtectedFiles int
 	ThreatsBlocked int
-	LastUpdate    time.Time
+	LastUpdate     time.Time
 }
 
 // ProtectionEngine manages ransomware protection.
 type ProtectionEngine struct {
-	rules           []ProtectionRule
-	protectedFiles  map[string]*ProtectedFile
-	status          *ProtectionStatus
-	handlers        []ProtectionHandler
-	mu              sync.RWMutex
+	rules          []ProtectionRule
+	protectedFiles map[string]*ProtectedFile
+	status         *ProtectionStatus
+	handlers       []ProtectionHandler
+	mu             sync.RWMutex
 }
 
 // ProtectionHandler handles protection events.
@@ -66,14 +66,14 @@ type ProtectionHandler func(event ProtectionEvent) error
 
 // ProtectionEvent represents a protection event.
 type ProtectionEvent struct {
-	Type        string
-	Timestamp   time.Time
-	FilePath    string
-	ThreatType  string
-	Action      string
-	Status      string
-	Message     string
-	Evidence    []string
+	Type       string
+	Timestamp  time.Time
+	FilePath   string
+	ThreatType string
+	Action     string
+	Status     string
+	Message    string
+	Evidence   []string
 }
 
 // NewProtectionEngine creates a new protection engine.
@@ -193,14 +193,14 @@ func (e *ProtectionEngine) CheckFile(filePath string) (*ProtectionEvent, error) 
 		// Check if rule applies to this file
 		if ruleAppliesTo(rule, filePath) {
 			event := &ProtectionEvent{
-				Type:        "file_check",
-				Timestamp:   time.Now(),
-				FilePath:    filePath,
-				ThreatType:  rule.Name,
-				Action:      rule.Actions[0],
-				Status:      "blocked",
-				Message:     fmt.Sprintf("Blocked by rule: %s", rule.Name),
-				Evidence:    rule.Conditions,
+				Type:       "file_check",
+				Timestamp:  time.Now(),
+				FilePath:   filePath,
+				ThreatType: rule.Name,
+				Action:     rule.Actions[0],
+				Status:     "blocked",
+				Message:    fmt.Sprintf("Blocked by rule: %s", rule.Name),
+				Evidence:   rule.Conditions,
 			}
 
 			// Trigger handlers
@@ -225,11 +225,11 @@ func (e *ProtectionEngine) ProtectFile(filePath string, originalHash string) (*P
 
 	// Create protected file entry
 	protected := &ProtectedFile{
-		Path:        filePath,
+		Path:         filePath,
 		OriginalHash: originalHash,
 		SnapshotPath: snapshotPath,
 		ProtectedAt:  time.Now(),
-		Status:      "protected",
+		Status:       "protected",
 	}
 
 	e.protectedFiles[filePath] = protected

@@ -1,6 +1,7 @@
 package recovery
 
 import (
+	"reflect"
 	"testing"
 	"time"
 )
@@ -18,11 +19,11 @@ func TestNewRecoveryEngine(t *testing.T) {
 func TestAddPlan(t *testing.T) {
 	engine := NewRecoveryEngine()
 	plan := RecoveryPlan{
-		ID:        "plan-001",
-		Name:      "Quick Recovery",
-		Method:    MethodSnapshot,
-		Priority:  1,
-		Steps:     make([]RecoveryStep, 0),
+		ID:       "plan-001",
+		Name:     "Quick Recovery",
+		Method:   MethodSnapshot,
+		Priority: 1,
+		Steps:    make([]RecoveryStep, 0),
 	}
 
 	engine.AddPlan(plan)
@@ -78,11 +79,11 @@ func TestAddStep(t *testing.T) {
 	engine.AddPlan(plan)
 
 	step := RecoveryStep{
-		Order:         1,
-		Name:          "Step 1",
-		Description:   "First step",
-		Timeout:       30 * time.Second,
-		RetryCount:    3,
+		Order:       1,
+		Name:        "Step 1",
+		Description: "First step",
+		Timeout:     30 * time.Second,
+		RetryCount:  3,
 	}
 
 	err := engine.AddStep("plan-001", step)
@@ -178,14 +179,421 @@ func TestGetRecoveryPlan(t *testing.T) {
 
 func TestGetRecoveryResult(t *testing.T) {
 	result := &RecoveryResult{
-		PlanID:   "plan-001",
-		Status:   "completed",
+		PlanID:         "plan-001",
+		Status:         "completed",
 		FilesRecovered: 10,
-		TotalFiles:   10,
+		TotalFiles:     10,
 	}
 
 	result2 := GetRecoveryResult(result)
 	if result2.Status != "completed" {
 		t.Errorf("Expected status 'completed', got '%s'", result2.Status)
+	}
+}
+
+func TestRecoveryEngine_AddPlan(t *testing.T) {
+	type fields struct {
+		plans     []RecoveryPlan
+		results   []RecoveryResult
+		snapshots map[string]string
+		backups   map[string]string
+		mu        interface{}
+	}
+	type args struct {
+		plan RecoveryPlan
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			e := &RecoveryEngine{
+				plans:     tt.fields.plans,
+				results:   tt.fields.results,
+				snapshots: tt.fields.snapshots,
+				backups:   tt.fields.backups,
+				mu:        tt.fields.mu,
+			}
+			e.AddPlan(tt.args.plan)
+		})
+	}
+}
+
+func TestRecoveryEngine_GetPlans(t *testing.T) {
+	type fields struct {
+		plans     []RecoveryPlan
+		results   []RecoveryResult
+		snapshots map[string]string
+		backups   map[string]string
+		mu        interface{}
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   []RecoveryPlan
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			e := &RecoveryEngine{
+				plans:     tt.fields.plans,
+				results:   tt.fields.results,
+				snapshots: tt.fields.snapshots,
+				backups:   tt.fields.backups,
+				mu:        tt.fields.mu,
+			}
+			if got := e.GetPlans(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("RecoveryEngine.GetPlans() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestRecoveryEngine_GetPlan(t *testing.T) {
+	type fields struct {
+		plans     []RecoveryPlan
+		results   []RecoveryResult
+		snapshots map[string]string
+		backups   map[string]string
+		mu        interface{}
+	}
+	type args struct {
+		id string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   *RecoveryPlan
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			e := &RecoveryEngine{
+				plans:     tt.fields.plans,
+				results:   tt.fields.results,
+				snapshots: tt.fields.snapshots,
+				backups:   tt.fields.backups,
+				mu:        tt.fields.mu,
+			}
+			if got := e.GetPlan(tt.args.id); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("RecoveryEngine.GetPlan() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestRecoveryEngine_CreateRecoveryPlan(t *testing.T) {
+	type fields struct {
+		plans     []RecoveryPlan
+		results   []RecoveryResult
+		snapshots map[string]string
+		backups   map[string]string
+		mu        interface{}
+	}
+	type args struct {
+		name   string
+		method string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   *RecoveryPlan
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			e := &RecoveryEngine{
+				plans:     tt.fields.plans,
+				results:   tt.fields.results,
+				snapshots: tt.fields.snapshots,
+				backups:   tt.fields.backups,
+				mu:        tt.fields.mu,
+			}
+			if got := e.CreateRecoveryPlan(tt.args.name, tt.args.method); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("RecoveryEngine.CreateRecoveryPlan() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestRecoveryEngine_AddStep(t *testing.T) {
+	type fields struct {
+		plans     []RecoveryPlan
+		results   []RecoveryResult
+		snapshots map[string]string
+		backups   map[string]string
+		mu        interface{}
+	}
+	type args struct {
+		planID string
+		step   RecoveryStep
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			e := &RecoveryEngine{
+				plans:     tt.fields.plans,
+				results:   tt.fields.results,
+				snapshots: tt.fields.snapshots,
+				backups:   tt.fields.backups,
+				mu:        tt.fields.mu,
+			}
+			if err := e.AddStep(tt.args.planID, tt.args.step); (err != nil) != tt.wantErr {
+				t.Errorf("RecoveryEngine.AddStep() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func TestRecoveryEngine_ExecutePlan(t *testing.T) {
+	type fields struct {
+		plans     []RecoveryPlan
+		results   []RecoveryResult
+		snapshots map[string]string
+		backups   map[string]string
+		mu        interface{}
+	}
+	type args struct {
+		planID        string
+		infectedFiles []string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   *RecoveryResult
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			e := &RecoveryEngine{
+				plans:     tt.fields.plans,
+				results:   tt.fields.results,
+				snapshots: tt.fields.snapshots,
+				backups:   tt.fields.backups,
+				mu:        tt.fields.mu,
+			}
+			if got := e.ExecutePlan(tt.args.planID, tt.args.infectedFiles); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("RecoveryEngine.ExecutePlan() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestRecoveryEngine_RecoverFromSnapshot(t *testing.T) {
+	type fields struct {
+		plans     []RecoveryPlan
+		results   []RecoveryResult
+		snapshots map[string]string
+		backups   map[string]string
+		mu        interface{}
+	}
+	type args struct {
+		filePath string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			e := &RecoveryEngine{
+				plans:     tt.fields.plans,
+				results:   tt.fields.results,
+				snapshots: tt.fields.snapshots,
+				backups:   tt.fields.backups,
+				mu:        tt.fields.mu,
+			}
+			if err := e.RecoverFromSnapshot(tt.args.filePath); (err != nil) != tt.wantErr {
+				t.Errorf("RecoveryEngine.RecoverFromSnapshot() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func TestRecoveryEngine_RecoverFromBackup(t *testing.T) {
+	type fields struct {
+		plans     []RecoveryPlan
+		results   []RecoveryResult
+		snapshots map[string]string
+		backups   map[string]string
+		mu        interface{}
+	}
+	type args struct {
+		filePath string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			e := &RecoveryEngine{
+				plans:     tt.fields.plans,
+				results:   tt.fields.results,
+				snapshots: tt.fields.snapshots,
+				backups:   tt.fields.backups,
+				mu:        tt.fields.mu,
+			}
+			if err := e.RecoverFromBackup(tt.args.filePath); (err != nil) != tt.wantErr {
+				t.Errorf("RecoveryEngine.RecoverFromBackup() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func TestRecoveryEngine_DecryptFile(t *testing.T) {
+	type fields struct {
+		plans     []RecoveryPlan
+		results   []RecoveryResult
+		snapshots map[string]string
+		backups   map[string]string
+		mu        interface{}
+	}
+	type args struct {
+		filePath       string
+		ransomwareType string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    bool
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			e := &RecoveryEngine{
+				plans:     tt.fields.plans,
+				results:   tt.fields.results,
+				snapshots: tt.fields.snapshots,
+				backups:   tt.fields.backups,
+				mu:        tt.fields.mu,
+			}
+			got, err := e.DecryptFile(tt.args.filePath, tt.args.ransomwareType)
+			if (err != nil) != tt.wantErr {
+				t.Fatalf("RecoveryEngine.DecryptFile() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			if tt.wantErr {
+				return
+			}
+			if got != tt.want {
+				t.Errorf("RecoveryEngine.DecryptFile() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestCalculateHash(t *testing.T) {
+	type args struct {
+		filePath string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    string
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := CalculateHash(tt.args.filePath)
+			if (err != nil) != tt.wantErr {
+				t.Fatalf("CalculateHash() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			if tt.wantErr {
+				return
+			}
+			if got != tt.want {
+				t.Errorf("CalculateHash() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestScanForSnapshots(t *testing.T) {
+	type args struct {
+		dir string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    map[string]string
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := ScanForSnapshots(tt.args.dir)
+			if (err != nil) != tt.wantErr {
+				t.Fatalf("ScanForSnapshots() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			if tt.wantErr {
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("ScanForSnapshots() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestRecoveryEngine_GenerateReport(t *testing.T) {
+	type fields struct {
+		plans     []RecoveryPlan
+		results   []RecoveryResult
+		snapshots map[string]string
+		backups   map[string]string
+		mu        interface{}
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   string
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			e := &RecoveryEngine{
+				plans:     tt.fields.plans,
+				results:   tt.fields.results,
+				snapshots: tt.fields.snapshots,
+				backups:   tt.fields.backups,
+				mu:        tt.fields.mu,
+			}
+			if got := e.GenerateReport(); got != tt.want {
+				t.Errorf("RecoveryEngine.GenerateReport() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }

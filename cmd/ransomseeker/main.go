@@ -1,9 +1,6 @@
 package main
 
 import (
-	"os/signal"
-	"syscall"
-	"context"
 	"fmt"
 	"os"
 	"time"
@@ -75,27 +72,27 @@ func detectRansomware() {
 	// Add known signatures
 	signatures := []detect.RansomwareSignature{
 		{
-			ID:       "sig-001",
-			Name:     "WannaCry",
-			Family:   "WannaCry",
-			Severity: "CRITICAL",
-			Indicators: []string{".wcry", "ransom", "bitcoin"},
+			ID:               "sig-001",
+			Name:             "WannaCry",
+			Family:           "WannaCry",
+			Severity:         "CRITICAL",
+			Indicators:       []string{".wcry", "ransom", "bitcoin"},
 			BehaviorPatterns: []string{"bulk_encryption", "lateral_movement"},
 		},
 		{
-			ID:       "sig-002",
-			Name:     "Ryuk",
-			Family:   "Ryuk",
-			Severity: "CRITICAL",
-			Indicators: []string{".ryuk", "ransomware", "bitcoin"},
+			ID:               "sig-002",
+			Name:             "Ryuk",
+			Family:           "Ryuk",
+			Severity:         "CRITICAL",
+			Indicators:       []string{".ryuk", "ransomware", "bitcoin"},
 			BehaviorPatterns: []string{"high_speed_encryption", "backup_deletion"},
 		},
 		{
-			ID:       "sig-003",
-			Name:     "LockBit",
-			Family:   "LockBit",
-			Severity: "CRITICAL",
-			Indicators: []string{".lockbit", "ransom", "bitcoin"},
+			ID:               "sig-003",
+			Name:             "LockBit",
+			Family:           "LockBit",
+			Severity:         "CRITICAL",
+			Indicators:       []string{".lockbit", "ransom", "bitcoin"},
 			BehaviorPatterns: []string{"bulk_encryption", "data_exfiltration"},
 		},
 	}

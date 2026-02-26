@@ -13,23 +13,23 @@ import (
 type DetectionMethod string
 
 const (
-	MethodFileChange    DetectionMethod = "file_change"
-	MethodEncryption    DetectionMethod = "encryption_pattern"
-	MethodProcess       DetectionMethod = "suspicious_process"
-	MethodBehavior      DetectionMethod = "behavioral_analysis"
-	MethodNetwork       DetectionMethod = "network_activity"
+	MethodFileChange DetectionMethod = "file_change"
+	MethodEncryption DetectionMethod = "encryption_pattern"
+	MethodProcess    DetectionMethod = "suspicious_process"
+	MethodBehavior   DetectionMethod = "behavioral_analysis"
+	MethodNetwork    DetectionMethod = "network_activity"
 )
 
 // RansomwareSignature represents a ransomware signature/pattern.
 type RansomwareSignature struct {
-	ID              string
-	Name            string
-	Family          string
-	Severity        string
-	Indicators      []string
-	Hashes          []string
+	ID               string
+	Name             string
+	Family           string
+	Severity         string
+	Indicators       []string
+	Hashes           []string
 	BehaviorPatterns []string
-	FirstSeen       time.Time
+	FirstSeen        time.Time
 }
 
 // FileChange represents a file system change.
@@ -45,19 +45,19 @@ type FileChange struct {
 
 // RansomwareBehavior represents detected ransomware behavior.
 type RansomwareBehavior struct {
-	ID              string
-	Timestamp       time.Time
-	Method          DetectionMethod
-	Confidence      float64
-	Score           float64
-	FilesAffected   int
-	FilesPerSecond  float64
-	EncryptionRate  float64
-	Signature       *RansomwareSignature
-	ProcessInfo     map[string]string
-	Evidence        []string
-	IsMalicious     bool
-	ThreatLevel     string
+	ID             string
+	Timestamp      time.Time
+	Method         DetectionMethod
+	Confidence     float64
+	Score          float64
+	FilesAffected  int
+	FilesPerSecond float64
+	EncryptionRate float64
+	Signature      *RansomwareSignature
+	ProcessInfo    map[string]string
+	Evidence       []string
+	IsMalicious    bool
+	ThreatLevel    string
 }
 
 // FileWatcher monitors file system for ransomware behavior.
@@ -72,12 +72,12 @@ type FileWatcher struct {
 
 // RansomwareDetector detects ransomware activity.
 type RansomwareDetector struct {
-	signatures    []RansomwareSignature
-	behaviors     []RansomwareBehavior
-	fileWatcher   *FileWatcher
-	thresholds    *DetectionThresholds
-	handlers      []BehaviorHandler
-	mu            sync.RWMutex
+	signatures  []RansomwareSignature
+	behaviors   []RansomwareBehavior
+	fileWatcher *FileWatcher
+	thresholds  *DetectionThresholds
+	handlers    []BehaviorHandler
+	mu          sync.RWMutex
 }
 
 // DetectionThresholds contains detection thresholds.
@@ -153,13 +153,13 @@ func (d *RansomwareDetector) DetectBehavior(changes []FileChange) []*RansomwareB
 
 	// Analyze changes
 	behavior := &RansomwareBehavior{
-		ID:          fmt.Sprintf("beh-%d", time.Now().UnixNano()),
-		Timestamp:   time.Now(),
-		Method:      MethodFileChange,
-		Confidence:  0.0,
-		Score:       0.0,
+		ID:            fmt.Sprintf("beh-%d", time.Now().UnixNano()),
+		Timestamp:     time.Now(),
+		Method:        MethodFileChange,
+		Confidence:    0.0,
+		Score:         0.0,
 		FilesAffected: len(changes),
-		Evidence:    make([]string, 0),
+		Evidence:      make([]string, 0),
 	}
 
 	// Calculate files per second

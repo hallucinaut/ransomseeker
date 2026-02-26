@@ -1,6 +1,8 @@
 package detect
 
 import (
+	"reflect"
+	"sync"
 	"testing"
 	"time"
 )
@@ -18,10 +20,10 @@ func TestNewRansomwareDetector(t *testing.T) {
 func TestAddSignature(t *testing.T) {
 	detector := NewRansomwareDetector()
 	sig := RansomwareSignature{
-		ID:       "sig-001",
-		Name:     "WannaCry",
-		Family:   "WannaCry",
-		Severity: "CRITICAL",
+		ID:         "sig-001",
+		Name:       "WannaCry",
+		Family:     "WannaCry",
+		Severity:   "CRITICAL",
 		Indicators: []string{".wcry", "ransom"},
 	}
 
@@ -143,8 +145,8 @@ func TestIsSuspiciousExtension(t *testing.T) {
 
 func TestGetBehavior(t *testing.T) {
 	behavior := &RansomwareBehavior{
-		ID:       "beh-001",
-		Method:   MethodFileChange,
+		ID:         "beh-001",
+		Method:     MethodFileChange,
 		Confidence: 0.9,
 	}
 
@@ -160,5 +162,547 @@ func TestGetDetector(t *testing.T) {
 
 	if result != detector {
 		t.Error("Expected detector to be the same instance")
+	}
+}
+
+func TestRansomwareDetector_AddSignature(t *testing.T) {
+	type fields struct {
+		signatures  []RansomwareSignature
+		behaviors   []RansomwareBehavior
+		fileWatcher *FileWatcher
+		thresholds  *DetectionThresholds
+		handlers    []BehaviorHandler
+		mu          sync.RWMutex
+	}
+	type args struct {
+		sig RansomwareSignature
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := &RansomwareDetector{
+				signatures:  tt.fields.signatures,
+				behaviors:   tt.fields.behaviors,
+				fileWatcher: tt.fields.fileWatcher,
+				thresholds:  tt.fields.thresholds,
+				handlers:    tt.fields.handlers,
+				mu:          tt.fields.mu,
+			}
+			d.AddSignature(tt.args.sig)
+		})
+	}
+}
+
+func TestRansomwareDetector_GetSignatures(t *testing.T) {
+	type fields struct {
+		signatures  []RansomwareSignature
+		behaviors   []RansomwareBehavior
+		fileWatcher *FileWatcher
+		thresholds  *DetectionThresholds
+		handlers    []BehaviorHandler
+		mu          sync.RWMutex
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   []RansomwareSignature
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := &RansomwareDetector{
+				signatures:  tt.fields.signatures,
+				behaviors:   tt.fields.behaviors,
+				fileWatcher: tt.fields.fileWatcher,
+				thresholds:  tt.fields.thresholds,
+				handlers:    tt.fields.handlers,
+				mu:          tt.fields.mu,
+			}
+			if got := d.GetSignatures(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("RansomwareDetector.GetSignatures() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestRansomwareDetector_SetThresholds(t *testing.T) {
+	type fields struct {
+		signatures  []RansomwareSignature
+		behaviors   []RansomwareBehavior
+		fileWatcher *FileWatcher
+		thresholds  *DetectionThresholds
+		handlers    []BehaviorHandler
+		mu          sync.RWMutex
+	}
+	type args struct {
+		thresholds DetectionThresholds
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := &RansomwareDetector{
+				signatures:  tt.fields.signatures,
+				behaviors:   tt.fields.behaviors,
+				fileWatcher: tt.fields.fileWatcher,
+				thresholds:  tt.fields.thresholds,
+				handlers:    tt.fields.handlers,
+				mu:          tt.fields.mu,
+			}
+			d.SetThresholds(tt.args.thresholds)
+		})
+	}
+}
+
+func TestRansomwareDetector_GetThresholds(t *testing.T) {
+	type fields struct {
+		signatures  []RansomwareSignature
+		behaviors   []RansomwareBehavior
+		fileWatcher *FileWatcher
+		thresholds  *DetectionThresholds
+		handlers    []BehaviorHandler
+		mu          sync.RWMutex
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   DetectionThresholds
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := &RansomwareDetector{
+				signatures:  tt.fields.signatures,
+				behaviors:   tt.fields.behaviors,
+				fileWatcher: tt.fields.fileWatcher,
+				thresholds:  tt.fields.thresholds,
+				handlers:    tt.fields.handlers,
+				mu:          tt.fields.mu,
+			}
+			if got := d.GetThresholds(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("RansomwareDetector.GetThresholds() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestRansomwareDetector_RegisterHandler(t *testing.T) {
+	type fields struct {
+		signatures  []RansomwareSignature
+		behaviors   []RansomwareBehavior
+		fileWatcher *FileWatcher
+		thresholds  *DetectionThresholds
+		handlers    []BehaviorHandler
+		mu          sync.RWMutex
+	}
+	type args struct {
+		handler BehaviorHandler
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := &RansomwareDetector{
+				signatures:  tt.fields.signatures,
+				behaviors:   tt.fields.behaviors,
+				fileWatcher: tt.fields.fileWatcher,
+				thresholds:  tt.fields.thresholds,
+				handlers:    tt.fields.handlers,
+				mu:          tt.fields.mu,
+			}
+			d.RegisterHandler(tt.args.handler)
+		})
+	}
+}
+
+func TestRansomwareDetector_DetectBehavior(t *testing.T) {
+	type fields struct {
+		signatures  []RansomwareSignature
+		behaviors   []RansomwareBehavior
+		fileWatcher *FileWatcher
+		thresholds  *DetectionThresholds
+		handlers    []BehaviorHandler
+		mu          sync.RWMutex
+	}
+	type args struct {
+		changes []FileChange
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   []*RansomwareBehavior
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := &RansomwareDetector{
+				signatures:  tt.fields.signatures,
+				behaviors:   tt.fields.behaviors,
+				fileWatcher: tt.fields.fileWatcher,
+				thresholds:  tt.fields.thresholds,
+				handlers:    tt.fields.handlers,
+				mu:          tt.fields.mu,
+			}
+			if got := d.DetectBehavior(tt.args.changes); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("RansomwareDetector.DetectBehavior() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestRansomwareDetector_calculateConfidence(t *testing.T) {
+	type fields struct {
+		signatures  []RansomwareSignature
+		behaviors   []RansomwareBehavior
+		fileWatcher *FileWatcher
+		thresholds  *DetectionThresholds
+		handlers    []BehaviorHandler
+		mu          sync.RWMutex
+	}
+	type args struct {
+		behavior *RansomwareBehavior
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   float64
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := &RansomwareDetector{
+				signatures:  tt.fields.signatures,
+				behaviors:   tt.fields.behaviors,
+				fileWatcher: tt.fields.fileWatcher,
+				thresholds:  tt.fields.thresholds,
+				handlers:    tt.fields.handlers,
+				mu:          tt.fields.mu,
+			}
+			if got := d.calculateConfidence(tt.args.behavior); got != tt.want {
+				t.Errorf("RansomwareDetector.calculateConfidence() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestRansomwareDetector_determineThreatLevel(t *testing.T) {
+	type fields struct {
+		signatures  []RansomwareSignature
+		behaviors   []RansomwareBehavior
+		fileWatcher *FileWatcher
+		thresholds  *DetectionThresholds
+		handlers    []BehaviorHandler
+		mu          sync.RWMutex
+	}
+	type args struct {
+		behavior *RansomwareBehavior
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   string
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := &RansomwareDetector{
+				signatures:  tt.fields.signatures,
+				behaviors:   tt.fields.behaviors,
+				fileWatcher: tt.fields.fileWatcher,
+				thresholds:  tt.fields.thresholds,
+				handlers:    tt.fields.handlers,
+				mu:          tt.fields.mu,
+			}
+			if got := d.determineThreatLevel(tt.args.behavior); got != tt.want {
+				t.Errorf("RansomwareDetector.determineThreatLevel() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestRansomwareDetector_matchSignature(t *testing.T) {
+	type fields struct {
+		signatures  []RansomwareSignature
+		behaviors   []RansomwareBehavior
+		fileWatcher *FileWatcher
+		thresholds  *DetectionThresholds
+		handlers    []BehaviorHandler
+		mu          sync.RWMutex
+	}
+	type args struct {
+		behavior *RansomwareBehavior
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   *RansomwareSignature
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := &RansomwareDetector{
+				signatures:  tt.fields.signatures,
+				behaviors:   tt.fields.behaviors,
+				fileWatcher: tt.fields.fileWatcher,
+				thresholds:  tt.fields.thresholds,
+				handlers:    tt.fields.handlers,
+				mu:          tt.fields.mu,
+			}
+			if got := d.matchSignature(tt.args.behavior); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("RansomwareDetector.matchSignature() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_containsSubstring(t *testing.T) {
+	type args struct {
+		s      string
+		substr string
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := containsSubstring(tt.args.s, tt.args.substr); got != tt.want {
+				t.Errorf("containsSubstring() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_findSubstring(t *testing.T) {
+	type args struct {
+		s      string
+		substr string
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := findSubstring(tt.args.s, tt.args.substr); got != tt.want {
+				t.Errorf("findSubstring() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestFileWatcher_Watch(t *testing.T) {
+	type fields struct {
+		watchedPaths []string
+		changes      chan FileChange
+		handlers     []func(FileChange)
+		mu           sync.RWMutex
+		started      bool
+		stopped      bool
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			w := &FileWatcher{
+				watchedPaths: tt.fields.watchedPaths,
+				changes:      tt.fields.changes,
+				handlers:     tt.fields.handlers,
+				mu:           tt.fields.mu,
+				started:      tt.fields.started,
+				stopped:      tt.fields.stopped,
+			}
+			if err := w.Watch(); (err != nil) != tt.wantErr {
+				t.Errorf("FileWatcher.Watch() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func TestFileWatcher_simulateWatching(t *testing.T) {
+	type fields struct {
+		watchedPaths []string
+		changes      chan FileChange
+		handlers     []func(FileChange)
+		mu           sync.RWMutex
+		started      bool
+		stopped      bool
+	}
+	tests := []struct {
+		name   string
+		fields fields
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			w := &FileWatcher{
+				watchedPaths: tt.fields.watchedPaths,
+				changes:      tt.fields.changes,
+				handlers:     tt.fields.handlers,
+				mu:           tt.fields.mu,
+				started:      tt.fields.started,
+				stopped:      tt.fields.stopped,
+			}
+			w.simulateWatching()
+		})
+	}
+}
+
+func TestFileWatcher_OnChange(t *testing.T) {
+	type fields struct {
+		watchedPaths []string
+		changes      chan FileChange
+		handlers     []func(FileChange)
+		mu           sync.RWMutex
+		started      bool
+		stopped      bool
+	}
+	type args struct {
+		handler func(FileChange)
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			w := &FileWatcher{
+				watchedPaths: tt.fields.watchedPaths,
+				changes:      tt.fields.changes,
+				handlers:     tt.fields.handlers,
+				mu:           tt.fields.mu,
+				started:      tt.fields.started,
+				stopped:      tt.fields.stopped,
+			}
+			w.OnChange(tt.args.handler)
+		})
+	}
+}
+
+func TestFileWatcher_SendChange(t *testing.T) {
+	type fields struct {
+		watchedPaths []string
+		changes      chan FileChange
+		handlers     []func(FileChange)
+		mu           sync.RWMutex
+		started      bool
+		stopped      bool
+	}
+	type args struct {
+		change FileChange
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			w := &FileWatcher{
+				watchedPaths: tt.fields.watchedPaths,
+				changes:      tt.fields.changes,
+				handlers:     tt.fields.handlers,
+				mu:           tt.fields.mu,
+				started:      tt.fields.started,
+				stopped:      tt.fields.stopped,
+			}
+			w.SendChange(tt.args.change)
+		})
+	}
+}
+
+func TestFileWatcher_GetChanges(t *testing.T) {
+	type fields struct {
+		watchedPaths []string
+		changes      chan FileChange
+		handlers     []func(FileChange)
+		mu           sync.RWMutex
+		started      bool
+		stopped      bool
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   []FileChange
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			w := &FileWatcher{
+				watchedPaths: tt.fields.watchedPaths,
+				changes:      tt.fields.changes,
+				handlers:     tt.fields.handlers,
+				mu:           tt.fields.mu,
+				started:      tt.fields.started,
+				stopped:      tt.fields.stopped,
+			}
+			if got := w.GetChanges(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("FileWatcher.GetChanges() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_isSuspiciousExtension(t *testing.T) {
+	type args struct {
+		ext string
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := isSuspiciousExtension(tt.args.ext); got != tt.want {
+				t.Errorf("isSuspiciousExtension() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }

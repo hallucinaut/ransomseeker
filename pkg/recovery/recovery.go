@@ -14,59 +14,59 @@ import (
 type RecoveryMethod string
 
 const (
-	MethodSnapshot   RecoveryMethod = "snapshot"
-	MethodBackup     RecoveryMethod = "backup"
-	MethodDecryption RecoveryMethod = "decryption"
+	MethodSnapshot    RecoveryMethod = "snapshot"
+	MethodBackup      RecoveryMethod = "backup"
+	MethodDecryption  RecoveryMethod = "decryption"
 	MethodRestoration RecoveryMethod = "restoration"
 )
 
 // RecoveryPlan represents a recovery plan.
 type RecoveryPlan struct {
-	ID             string
-	Name           string
-	Description    string
-	Method         RecoveryMethod
-	Priority       int
-	Steps          []RecoveryStep
-	EstimatedTime  time.Duration
-	SuccessRate    float64
-	LastUsed       time.Time
-	SuccessCount   int
-	FailedCount    int
+	ID            string
+	Name          string
+	Description   string
+	Method        RecoveryMethod
+	Priority      int
+	Steps         []RecoveryStep
+	EstimatedTime time.Duration
+	SuccessRate   float64
+	LastUsed      time.Time
+	SuccessCount  int
+	FailedCount   int
 }
 
 // RecoveryStep represents a step in recovery.
 type RecoveryStep struct {
-	Order         int
-	Name          string
-	Description   string
-	Command       string
+	Order          int
+	Name           string
+	Description    string
+	Command        string
 	ExpectedOutput string
-	Timeout       time.Duration
-	RetryCount    int
+	Timeout        time.Duration
+	RetryCount     int
 }
 
 // RecoveryResult represents a recovery result.
 type RecoveryResult struct {
-	PlanID      string
-	Status      string
+	PlanID         string
+	Status         string
 	FilesRecovered int
-	TotalFiles  int
-	SuccessRate float64
-	StartTime   time.Time
-	EndTime     time.Time
-	Duration    time.Duration
-	Error       error
-	Evidence    []string
+	TotalFiles     int
+	SuccessRate    float64
+	StartTime      time.Time
+	EndTime        time.Time
+	Duration       time.Duration
+	Error          error
+	Evidence       []string
 }
 
 // RecoveryEngine manages ransomware recovery.
 type RecoveryEngine struct {
-	plans         []RecoveryPlan
-	results       []RecoveryResult
-	snapshots     map[string]string // path -> snapshot_path
-	backups       map[string]string // path -> backup_path
-	mu            interface{} // simplified for demo
+	plans     []RecoveryPlan
+	results   []RecoveryResult
+	snapshots map[string]string // path -> snapshot_path
+	backups   map[string]string // path -> backup_path
+	mu        interface{}       // simplified for demo
 }
 
 // NewRecoveryEngine creates a new recovery engine.
@@ -138,11 +138,11 @@ func (e *RecoveryEngine) ExecutePlan(planID string, infectedFiles []string) *Rec
 	}
 
 	result := &RecoveryResult{
-		PlanID:      planID,
-		Status:      "running",
-		TotalFiles:  len(infectedFiles),
-		StartTime:   time.Now(),
-		Evidence:    make([]string, 0),
+		PlanID:     planID,
+		Status:     "running",
+		TotalFiles: len(infectedFiles),
+		StartTime:  time.Now(),
+		Evidence:   make([]string, 0),
 	}
 
 	result.Evidence = append(result.Evidence, fmt.Sprintf("Starting recovery for %d files", len(infectedFiles)))
@@ -259,18 +259,18 @@ func CreateCommonPlans() []RecoveryPlan {
 			Priority:    1,
 			Steps: []RecoveryStep{
 				{
-					Order:         1,
-					Name:          "Identify latest snapshot",
-					Description:   "Find the most recent snapshot for each file",
-					Timeout:       30 * time.Second,
-					RetryCount:    3,
+					Order:       1,
+					Name:        "Identify latest snapshot",
+					Description: "Find the most recent snapshot for each file",
+					Timeout:     30 * time.Second,
+					RetryCount:  3,
 				},
 				{
-					Order:         2,
-					Name:          "Restore files",
-					Description:   "Restore files from snapshots",
-					Timeout:       5 * time.Minute,
-					RetryCount:    3,
+					Order:       2,
+					Name:        "Restore files",
+					Description: "Restore files from snapshots",
+					Timeout:     5 * time.Minute,
+					RetryCount:  3,
 				},
 			},
 			EstimatedTime: 10 * time.Minute,
@@ -284,32 +284,32 @@ func CreateCommonPlans() []RecoveryPlan {
 			Priority:    2,
 			Steps: []RecoveryStep{
 				{
-					Order:         1,
-					Name:          "Scan for backups",
-					Description:   "Scan for available backups",
-					Timeout:       1 * time.Minute,
-					RetryCount:    3,
+					Order:       1,
+					Name:        "Scan for backups",
+					Description: "Scan for available backups",
+					Timeout:     1 * time.Minute,
+					RetryCount:  3,
 				},
 				{
-					Order:         2,
-					Name:          "Verify backups",
-					Description:   "Verify backup integrity",
-					Timeout:       30 * time.Second,
-					RetryCount:    3,
+					Order:       2,
+					Name:        "Verify backups",
+					Description: "Verify backup integrity",
+					Timeout:     30 * time.Second,
+					RetryCount:  3,
 				},
 				{
-					Order:         3,
-					Name:          "Restore files",
-					Description:   "Restore files from verified backups",
-					Timeout:       5 * time.Minute,
-					RetryCount:    3,
+					Order:       3,
+					Name:        "Restore files",
+					Description: "Restore files from verified backups",
+					Timeout:     5 * time.Minute,
+					RetryCount:  3,
 				},
 				{
-					Order:         4,
-					Name:          "Verify restoration",
-					Description:   "Verify files are restored correctly",
-					Timeout:       30 * time.Second,
-					RetryCount:    3,
+					Order:       4,
+					Name:        "Verify restoration",
+					Description: "Verify files are restored correctly",
+					Timeout:     30 * time.Second,
+					RetryCount:  3,
 				},
 			},
 			EstimatedTime: 30 * time.Minute,
@@ -323,25 +323,25 @@ func CreateCommonPlans() []RecoveryPlan {
 			Priority:    3,
 			Steps: []RecoveryStep{
 				{
-					Order:         1,
-					Name:          "Assess damage",
-					Description:   "Assess extent of ransomware damage",
-					Timeout:       1 * time.Minute,
-					RetryCount:    3,
+					Order:       1,
+					Name:        "Assess damage",
+					Description: "Assess extent of ransomware damage",
+					Timeout:     1 * time.Minute,
+					RetryCount:  3,
 				},
 				{
-					Order:         2,
-					Name:          "Identify recoverable files",
-					Description:   "Identify files that can be recovered",
-					Timeout:       30 * time.Second,
-					RetryCount:    3,
+					Order:       2,
+					Name:        "Identify recoverable files",
+					Description: "Identify files that can be recovered",
+					Timeout:     30 * time.Second,
+					RetryCount:  3,
 				},
 				{
-					Order:         3,
-					Name:          "Recover critical files",
-					Description:   "Recover critical files first",
-					Timeout:       1 * time.Minute,
-					RetryCount:    3,
+					Order:       3,
+					Name:        "Recover critical files",
+					Description: "Recover critical files first",
+					Timeout:     1 * time.Minute,
+					RetryCount:  3,
 				},
 			},
 			EstimatedTime: 15 * time.Minute,
